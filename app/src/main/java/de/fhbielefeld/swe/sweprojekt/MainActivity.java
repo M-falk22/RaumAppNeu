@@ -16,7 +16,7 @@ import android.widget.EditText;
 public class MainActivity extends AppCompatActivity {
     TimePicker Picker;
     Button Button;
-    Raum[] RaumListe = new Raum[10];
+    Raum[] RaumListe = new Raum[9];
     EditText RaumEingabe;
     int AnzahlRaum = 0;
     int RaumIndex = 0;
