@@ -6,6 +6,7 @@ public class Buchung {
     int EndzeitStunde;
     int EndzeitMinute;
     int NutzerID;
+    boolean Vollstaendig; //NOTE(Moritz): Erstmal nur in Bezug auf die Zeit, ungeachtet der NutzerID
 
     public Buchung() {
         StartzeitStunde = 0;
@@ -13,6 +14,7 @@ public class Buchung {
         EndzeitStunde = 0;
         EndzeitMinute = 0;
         NutzerID = 0;
+        Vollstaendig = false;
     }
 
     public Buchung(int startzeitStunde, int startzeitMinute, int endzeitStunde, int endzeitMinute) {

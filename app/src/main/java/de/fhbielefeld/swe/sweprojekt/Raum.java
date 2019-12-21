@@ -17,10 +17,21 @@ public class Raum {
         AnzahlBuchungen = 0;
     }
 
-    public void Buchen(int pStartzeitStunde, int pStartzeitMinute)
+    public void BuchenStartzeit(int pStartzeitStunde, int pStartzeitMinute)
     {
         Buchungen[AnzahlBuchungen] = new Buchung(pStartzeitStunde, pStartzeitMinute);
         AnzahlBuchungen++;
+    }
+
+    public void BuchenEndzeit(int pEndzeitStunde, int pEndzeitMinute, int pIndex)
+    {
+        Buchungen[pIndex].setEndzeitStunde(pEndzeitStunde);
+        Buchungen[pIndex].setEndzeitMinute(pEndzeitMinute);
+    }
+
+    public int getAnzahlBuchungen()
+    {
+        return AnzahlBuchungen;
     }
 
     public Buchung getBuchung(int pIndex)

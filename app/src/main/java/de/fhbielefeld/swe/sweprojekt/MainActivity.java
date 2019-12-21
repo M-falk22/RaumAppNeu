@@ -16,14 +16,21 @@ import android.widget.EditText;
 public class MainActivity extends AppCompatActivity {
     TimePicker Picker;
     Button Button;
-    Raum[] RaumListe = new Raum[9];
+    Raum[] RaumListe = new Raum[10];
     EditText RaumEingabe;
     int AnzahlRaum = 0;
     int RaumIndex = 0;
+    int BuchungIndex = 0;
+
+    enum AppZustand
+    {
+        STARTZEITEINGABE,
+        ENDZEITEINGABE
+    }
+
+    AppZustand Zustand = AppZustand.STARTZEITEINGABE;
 
     @Override
-
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -38,20 +45,34 @@ public class MainActivity extends AppCompatActivity {
         Button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                RaumIndex = Integer.parseInt(RaumEingabe.getText().toString());
 
-                if(RaumIndex < AnzahlRaum)
+                if(Zustand.equals(AppZustand.STARTZEITEINGABE))
                 {
-                    int StartzeitStunde = Picker.getHour();
-                    int StartzeitMinute = Picker.getMinute();
+                    Zustand = AppZustand.ENDZEITEINGABE;
 
-                    RaumListe[RaumIndex].Buchen(StartzeitStunde, StartzeitMinute);
+                    RaumIndex = Integer.parseInt(RaumEingabe.getText().toString());
 
-                    int AnzahlBuchungen = RaumListe[RaumIndex].AnzahlBuchungen;
+                    if (RaumIndex < AnzahlRaum) {
+                        int StartzeitStunde = Picker.getHour();
+                        int StartzeitMinute = Picker.getMinute();
 
-                    Buchung TestBuchung = RaumListe[RaumIndex].getBuchung(AnzahlBuchungen-1);
+                        RaumListe[RaumIndex].BuchenStartzeit(StartzeitStunde, StartzeitMinute);
+                        BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen()-1; //nicht safe
 
-                    System.out.println("Raum: "+RaumListe[RaumIndex]+" Startzeit: "+TestBuchung.StartzeitStunde+":"+TestBuchung.StartzeitMinute);
+                        //NOTE(Moritz): Folgende drei Zeilen sind lediglich Test-Code...
+                        int AnzahlBuchungen = RaumListe[RaumIndex].AnzahlBuchungen;
+                        Buchung TestBuchung = RaumListe[RaumIndex].getBuchung(AnzahlBuchungen - 1);
+                        System.out.println("Raum: " + RaumListe[RaumIndex] + " Startzeit: " + TestBuchung.StartzeitStunde + ":" + TestBuchung.StartzeitMinute);
+                    }
+                }
+                else if(Zustand.equals(AppZustand.ENDZEITEINGABE))
+                {
+                    Zustand = AppZustand.STARTZEITEINGABE;
+
+                    int EndzeitStunde = Picker.getHour();
+                    int EndzeitMinute = Picker.getMinute();
+
+                    RaumListe[RaumIndex].BuchenEndzeit(EndzeitStunde, EndzeitMinute, BuchungIndex);
                 }
             }
         });
