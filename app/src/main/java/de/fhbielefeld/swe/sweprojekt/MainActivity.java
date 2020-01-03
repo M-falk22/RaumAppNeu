@@ -59,9 +59,11 @@ public class MainActivity extends AppCompatActivity {
                         RaumListe[RaumIndex].BuchenStartzeit(StartzeitStunde, StartzeitMinute);
                         BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen()-1; //nicht safe
 
+                        Button.setText("Endzeit festlegen");
+
                         //NOTE(Moritz): Folgende drei Zeilen sind lediglich Test-Code...
                         int AnzahlBuchungen = RaumListe[RaumIndex].AnzahlBuchungen;
-                        Buchung TestBuchung = RaumListe[RaumIndex].getBuchung(AnzahlBuchungen - 1);
+                        Buchung TestBuchung = RaumListe[RaumIndex].getBuchung(BuchungIndex);
                         System.out.println("Raum: " + RaumListe[RaumIndex] + " Startzeit: " + TestBuchung.StartzeitStunde + ":" + TestBuchung.StartzeitMinute);
                     }
                 }
