@@ -30,6 +30,7 @@ public class Buchung {
         StartzeitMinute = startzeitMinute;
         EndzeitStunde = StartzeitStunde+1;
         EndzeitMinute = StartzeitMinute;
+        Vollstaendig = true;
         NutzerID = 0;
     }
 
