@@ -26,6 +26,8 @@ public class FragmentLogIn extends Fragment {
            public void onClick(View view)
            {
                Toast.makeText(getActivity(), "Gehe zum Buchungs-Fragment", Toast.LENGTH_SHORT).show();
+
+               ((MainActivity)getActivity()).setViewPager(1);
            }
         });
 
