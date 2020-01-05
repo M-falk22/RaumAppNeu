@@ -1,6 +1,7 @@
 package de.fhbielefeld.swe.sweprojekt;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 
@@ -14,6 +15,11 @@ import android.widget.EditText;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    //GUI Stuff
+    SectionsStatePagerAdapter mSectionsStatePagerAdapter;
+    ViewPager mViewPager;
+
     TimePicker Picker;
     Button Button;
     Raum[] RaumListe = new Raum[10];
@@ -34,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
+
+        mViewPager = findViewById(R.id.container);
+
         Button = findViewById(R.id.button);
         Picker = findViewById(R.id.time_picker);
         Picker.setIs24HourView(true);
