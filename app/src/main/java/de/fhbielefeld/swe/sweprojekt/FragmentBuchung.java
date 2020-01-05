@@ -14,11 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.squareup.otto.Bus;
+
 public class FragmentBuchung extends Fragment {
     private Button ButtonBack;
     TimePicker Picker;
     Button Button;
     EditText RaumEingabe;
+    Bus EventBus;
 
     /*Raum[] RaumListe = new Raum[10];
     Nutzer[] NutzerListe = new Nutzer[10];
@@ -41,51 +44,19 @@ public class FragmentBuchung extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragmentbuchung_layout, container, false);
 
-        OnItemSelectedLi
-
         ButtonBack = view.findViewById(R.id.buttonNavFrgLogIn);
 
+
+        EventBus = ((MainActivity)getActivity()).getEventBus();
         Button = view.findViewById(R.id.button);
         Picker = view.findViewById(R.id.time_picker);
         Picker.setIs24HourView(true);
         RaumEingabe = view.findViewById(R.id.editText);
 
-        Main.RaumListe[AnzahlRaum] = new Raum(AnzahlRaum++);
-
         Button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-
-                if(Zustand.equals(AppZustand.STARTZEITEINGABE))
-                {
-                    Zustand = AppZustand.ENDZEITEINGABE;
-
-                    RaumIndex = Integer.parseInt(RaumEingabe.getText().toString());
-
-                    if (RaumIndex < AnzahlRaum) {
-                        int StartzeitStunde = Picker.getHour();
-                        int StartzeitMinute = Picker.getMinute();
-
-                        RaumListe[RaumIndex].BuchenStartzeit(StartzeitStunde, StartzeitMinute);
-                        BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen()-1; //nicht safe
-
-                        Button.setText("Endzeit festlegen");
-
-                        //NOTE(Moritz): Folgende drei Zeilen sind lediglich Test-Code...
-                        int AnzahlBuchungen = RaumListe[RaumIndex].AnzahlBuchungen;
-                        Buchung TestBuchung = RaumListe[RaumIndex].getBuchung(BuchungIndex);
-                        System.out.println("Raum: " + RaumListe[RaumIndex] + " Startzeit: " + TestBuchung.StartzeitStunde + ":" + TestBuchung.StartzeitMinute);
-                    }
-                }
-                else if(Zustand.equals(AppZustand.ENDZEITEINGABE))
-                {
-                    Zustand = AppZustand.STARTZEITEINGABE;
-
-                    int EndzeitStunde = Picker.getHour();
-                    int EndzeitMinute = Picker.getMinute();
-
-                    RaumListe[RaumIndex].BuchenEndzeit(EndzeitStunde, EndzeitMinute, BuchungIndex);
-                }
+                EventBus.post("BUCHEN");
             }
         });
 
@@ -96,7 +67,8 @@ public class FragmentBuchung extends Fragment {
            {
                Toast.makeText(getActivity(), "Gehe zum Login-Fragment", Toast.LENGTH_SHORT).show();
 
-               ((MainActivity)getActivity()).setViewPager(0);
+               EventBus.post("GEHEZULOGIN");
+               //((MainActivity)getActivity()).setViewPager(0);
            }
         });
 

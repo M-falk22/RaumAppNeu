@@ -7,10 +7,11 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 public class MainActivity extends AppCompatActivity {
 
-    Bus EventBus = new Bus();
+    private Bus EventBus = new Bus();
     Raum[] RaumListe = new Raum[10];
     Nutzer[] NutzerListe = new Nutzer[10];
     int AnzahlRaum = 0;
@@ -44,9 +45,50 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(mSectionsStatePagerAdapter);
 
+        RaumListe[AnzahlRaum] = new Raum(AnzahlRaum++);
+
+        if(Zustand.equals(AppZustand.STARTZEITEINGABE))
+        {
+            Zustand = AppZustand.ENDZEITEINGABE;
+
+            RaumIndex = Integer.parseInt(RaumEingabe.getText().toString());
+
+            if (RaumIndex < AnzahlRaum) {
+                int StartzeitStunde = Picker.getHour();
+                int StartzeitMinute = Picker.getMinute();
+
+                RaumListe[RaumIndex].BuchenStartzeit(StartzeitStunde, StartzeitMinute);
+                BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen()-1; //nicht safe
+
+                Button.setText("Endzeit festlegen");
+
+                //NOTE(Moritz): Folgende drei Zeilen sind lediglich Test-Code...
+                int AnzahlBuchungen = RaumListe[RaumIndex].AnzahlBuchungen;
+                Buchung TestBuchung = RaumListe[RaumIndex].getBuchung(BuchungIndex);
+                System.out.println("Raum: " + RaumListe[RaumIndex] + " Startzeit: " + TestBuchung.StartzeitStunde + ":" + TestBuchung.StartzeitMinute);
+            }
+        }
+        else if(Zustand.equals(AppZustand.ENDZEITEINGABE))
+        {
+            Zustand = AppZustand.STARTZEITEINGABE;
+
+            int EndzeitStunde = Picker.getHour();
+            int EndzeitMinute = Picker.getMinute();
+
+            RaumListe[RaumIndex].BuchenEndzeit(EndzeitStunde, EndzeitMinute, BuchungIndex);
+        }
 
     }
 
+    @Subscribe public void FragmentEvent(String pEvent)
+    {
+        if(pEvent.equals("BUCHEN"))
+        {
+            UpdateBuchung();
+        }
+    }
+
+    public void UpdateBuchung()
     public void setViewPager(int FragmentIndex)
     {
         mViewPager.setCurrentItem(FragmentIndex);
@@ -107,5 +149,10 @@ public class MainActivity extends AppCompatActivity {
     public void setMomentanerNutzerIndex(int pMomentanerNutzerIndex)
     {
         MomentanerNutzerIndex = pMomentanerNutzerIndex;
+    }
+
+    public Bus getEventBus()
+    {
+        return EventBus;
     }
 }
