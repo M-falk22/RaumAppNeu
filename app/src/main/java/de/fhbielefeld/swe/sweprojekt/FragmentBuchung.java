@@ -1,5 +1,6 @@
 package de.fhbielefeld.swe.sweprojekt;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,10 @@ public class FragmentBuchung extends Fragment {
     private Button ButtonBack;
     TimePicker Picker;
     Button Button;
-    Raum[] RaumListe = new Raum[10];
     EditText RaumEingabe;
+
+    /*Raum[] RaumListe = new Raum[10];
+    Nutzer[] NutzerListe = new Nutzer[10];
     int AnzahlRaum = 0;
     int RaumIndex = 0;
     int BuchungIndex = 0;
@@ -29,12 +32,16 @@ public class FragmentBuchung extends Fragment {
         ENDZEITEINGABE
     }
 
-    AppZustand Zustand = AppZustand.STARTZEITEINGABE;
+    AppZustand Zustand = AppZustand.STARTZEITEINGABE;*/
+
+    Activity Main = ((MainActivity)getActivity());
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragmentbuchung_layout, container, false);
+
+        OnItemSelectedLi
 
         ButtonBack = view.findViewById(R.id.buttonNavFrgLogIn);
 
@@ -43,8 +50,7 @@ public class FragmentBuchung extends Fragment {
         Picker.setIs24HourView(true);
         RaumEingabe = view.findViewById(R.id.editText);
 
-
-        RaumListe[AnzahlRaum] = new Raum(AnzahlRaum++);
+        Main.RaumListe[AnzahlRaum] = new Raum(AnzahlRaum++);
 
         Button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

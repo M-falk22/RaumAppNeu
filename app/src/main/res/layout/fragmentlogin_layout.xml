@@ -4,8 +4,19 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/buttonNavFrgBuchung"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FragmentTestBuchung"
-        android:id="@+id/buttonNavFrgBuchung"/>
+        android:layout_below="@+id/EditTextNutzerID"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="162dp"
+        android:text="Login" />
+
+    <EditText
+        android:id="@+id/EditTextNutzerID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="Dein Nutzername"/>
 </RelativeLayout>
