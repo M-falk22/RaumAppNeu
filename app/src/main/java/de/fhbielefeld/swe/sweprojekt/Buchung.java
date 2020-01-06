@@ -6,14 +6,15 @@ public class Buchung {
     int EndzeitStunde;
     int EndzeitMinute;
     String RaumName;
-    boolean Vollstaendig; //NOTE(Moritz): Erstmal nur in Bezug auf die Zeit, ungeachtet der NutzerID
+    //boolean Vollstaendig; //NOTE(Moritz): Erstmal nur in Bezug auf die Zeit, ungeachtet der NutzerID
 
     public Buchung() {
         StartzeitStunde = 0;
         StartzeitMinute = 0;
         EndzeitStunde = 0;
         EndzeitMinute = 0;
-        Vollstaendig = false;
+        RaumName = "UNBENANNT";
+        //Vollstaendig = false;
     }
 
     public Buchung(int startzeitStunde, int startzeitMinute, int endzeitStunde, int endzeitMinute) {
@@ -21,6 +22,8 @@ public class Buchung {
         StartzeitMinute = startzeitMinute;
         EndzeitStunde = endzeitStunde;
         EndzeitMinute = endzeitMinute;
+        RaumName = "UNBENANNT";
+
     }
 
     public Buchung(int startzeitStunde, int startzeitMinute) {
@@ -28,7 +31,7 @@ public class Buchung {
         StartzeitMinute = startzeitMinute;
         EndzeitStunde = StartzeitStunde+1;
         EndzeitMinute = StartzeitMinute;
-        Vollstaendig = true;
+       // Vollstaendig = true;
     }
 
     public Buchung(int startzeitStunde, int startzeitMinute, int endzeitStunde, int endzeitMinute, int nutzerID) {
@@ -69,4 +72,6 @@ public class Buchung {
     public void setEndzeitMinute(int endzeitMinute) {
         EndzeitMinute = endzeitMinute;
     }
+
+    public void setRaumName(String raumName) { RaumName = raumName; }
 }
