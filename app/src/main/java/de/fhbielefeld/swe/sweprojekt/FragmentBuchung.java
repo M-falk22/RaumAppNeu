@@ -56,7 +56,10 @@ public class FragmentBuchung extends Fragment {
         Button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                EventBus.post("BUCHEN");
+                //EventBus.post("BUCHEN");
+                String RaumName = RaumEingabe.getText().toString();
+                System.out.println("NAME: "+RaumName);
+                EventBus.post(new BuchungEvent(RaumName, Picker.getHour(), Picker.getMinute()));
             }
         });
 
@@ -67,8 +70,7 @@ public class FragmentBuchung extends Fragment {
            {
                Toast.makeText(getActivity(), "Gehe zum Login-Fragment", Toast.LENGTH_SHORT).show();
 
-               EventBus.post("GEHEZULOGIN");
-               //((MainActivity)getActivity()).setViewPager(0);
+               ((MainActivity)getActivity()).setViewPager(0);
            }
         });
 

@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.squareup.otto.Bus;
 
-public class FragmentLogIn extends Fragment {
+public class FragmentStornierung extends Fragment {
     private Button ButtonLogIn;
     EditText NutzerNameEingabe;
     Bus EventBus;
@@ -22,7 +22,7 @@ public class FragmentLogIn extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragmentlogin_layout, container, false);
+        View view = inflater.inflate(R.layout.fragmentstornierung_layout, container, false);
 
         EventBus = ((MainActivity)getActivity()).getEventBus();
         ButtonLogIn = view.findViewById(R.id.buttonNavFrgBuchung);

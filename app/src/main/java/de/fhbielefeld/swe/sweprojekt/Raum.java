@@ -1,19 +1,19 @@
 package de.fhbielefeld.swe.sweprojekt;
 
 public class Raum {
-    int Nummer;
+    String RaumName;
     int AnzahlBuchungen;
     Buchung[] Buchungen = new Buchung[10];
 
     public Raum()
     {
-        Nummer = 0;
+        RaumName = "UNBENANNT!";
         AnzahlBuchungen = 0;
     }
 
-    public Raum(int pNummer)
+    public Raum(String pRaumName)
     {
-        Nummer = pNummer;
+        RaumName = pRaumName;
         AnzahlBuchungen = 0;
     }
 

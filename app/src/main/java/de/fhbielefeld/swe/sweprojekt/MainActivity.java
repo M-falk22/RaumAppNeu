@@ -14,18 +14,21 @@ public class MainActivity extends AppCompatActivity {
     private Bus EventBus = new Bus();
     Raum[] RaumListe = new Raum[10];
     Nutzer[] NutzerListe = new Nutzer[10];
+    int AnzahlNutzer = 0;
+    int NutzerIndex;
     int AnzahlRaum = 0;
-    int RaumIndex = 0;
+    String RaumName;
+    int RaumIndex;
     int BuchungIndex = 0;
     int MomentanerNutzerIndex = 0;
 
-    enum AppZustand
+    enum BuchungZustand
     {
         STARTZEITEINGABE,
         ENDZEITEINGABE
     }
 
-    AppZustand Zustand = AppZustand.STARTZEITEINGABE;
+    BuchungZustand Zustand = BuchungZustand.STARTZEITEINGABE;
 
     //GUI Stuff
     SectionsStatePagerAdapter mSectionsStatePagerAdapter;
@@ -45,50 +48,94 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(mSectionsStatePagerAdapter);
 
-        RaumListe[AnzahlRaum] = new Raum(AnzahlRaum++);
+        //NOTE(Moritz): Räume sind Hardcoded. In der Praxis wäre es sicherlich schöner eine Input-Textdatei zu parsen und dementsprechend das Array zu erstellen...
+        RaumListe[AnzahlRaum++] = new Raum("C013");
+        RaumListe[AnzahlRaum++] = new Raum("D010");
+        RaumListe[AnzahlRaum++] = new Raum("E406");
 
-        if(Zustand.equals(AppZustand.STARTZEITEINGABE))
+        EventBus.register(this);
+
+    }
+
+    @Subscribe public void FragmentBuchungEvent(BuchungEvent pEvent)
+    {
+        if(Zustand.equals(BuchungZustand.STARTZEITEINGABE))
         {
-            Zustand = AppZustand.ENDZEITEINGABE;
 
-            RaumIndex = Integer.parseInt(RaumEingabe.getText().toString());
+            RaumName = pEvent.RaumName;
 
-            if (RaumIndex < AnzahlRaum) {
-                int StartzeitStunde = Picker.getHour();
-                int StartzeitMinute = Picker.getMinute();
+            RaumIndex = RaumArrayIndex(RaumName);
 
-                RaumListe[RaumIndex].BuchenStartzeit(StartzeitStunde, StartzeitMinute);
-                BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen()-1; //nicht safe
+            if(RaumIndex >= 0)
+            {
+                RaumListe[RaumIndex].BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
 
-                Button.setText("Endzeit festlegen");
+                BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
 
-                //NOTE(Moritz): Folgende drei Zeilen sind lediglich Test-Code...
-                int AnzahlBuchungen = RaumListe[RaumIndex].AnzahlBuchungen;
-                Buchung TestBuchung = RaumListe[RaumIndex].getBuchung(BuchungIndex);
-                System.out.println("Raum: " + RaumListe[RaumIndex] + " Startzeit: " + TestBuchung.StartzeitStunde + ":" + TestBuchung.StartzeitMinute);
+                System.out.println("STARTZEITEINGABE erfolgreich!");
+                Zustand = BuchungZustand.ENDZEITEINGABE;
+            }
+            else
+            {
+                System.out.println("STARTZEITEINGABE fehlgeschlagen! Ungueltiger Raum-Name!");
+            }
+
+            //Post event zur Button-Änderung bzw Toast-anzeigen!
+        }
+        else if(Zustand.equals(BuchungZustand.ENDZEITEINGABE))
+        {
+            Zustand = BuchungZustand.STARTZEITEINGABE;
+
+            RaumListe[RaumIndex].BuchenEndzeit(pEvent.ZeitStunde, pEvent.ZeitMinute, BuchungIndex);
+            //Post event zur Button-Änderung
+
+            //NutzerListe[NutzerIndex].Buchungen[]
+
+            System.out.println("ENDZEITEINGABE erfolgreich!");
+        }
+    }
+
+    @Subscribe public void FragmentLogInEvent(LogInEvent pEvent)
+    {
+        NutzerIndex = NutzerArrayIndex(pEvent.NutzerName);
+        if(NutzerIndex >= 0)
+        {
+            System.out.println("Angemeldet als: "+pEvent.NutzerName);
+        }
+        else
+        {
+            NutzerListe[AnzahlNutzer] = new Nutzer(pEvent.NutzerName);
+            NutzerIndex = AnzahlNutzer++;
+        }
+    }
+
+    public int NutzerArrayIndex(String pNutzerName)
+    {
+        int Result = -1;
+        for(int NutzerCount = 0; NutzerCount < AnzahlNutzer; NutzerCount++)
+        {
+            if(NutzerListe[NutzerCount].Name.equals(pNutzerName))
+            {
+                Result = NutzerCount;
             }
         }
-        else if(Zustand.equals(AppZustand.ENDZEITEINGABE))
-        {
-            Zustand = AppZustand.STARTZEITEINGABE;
-
-            int EndzeitStunde = Picker.getHour();
-            int EndzeitMinute = Picker.getMinute();
-
-            RaumListe[RaumIndex].BuchenEndzeit(EndzeitStunde, EndzeitMinute, BuchungIndex);
-        }
-
+        return Result;
     }
 
-    @Subscribe public void FragmentEvent(String pEvent)
+    public int RaumArrayIndex(String pRaumName)
     {
-        if(pEvent.equals("BUCHEN"))
+        int Result = -1;
+        for(int RaumCount = 0; RaumCount < AnzahlRaum; RaumCount++)
         {
-            UpdateBuchung();
+            if(RaumListe[RaumCount].RaumName.equals(pRaumName))
+            {
+                Result = RaumCount;
+            }
         }
+        return Result;
     }
 
-    public void UpdateBuchung()
+    //public void UpdateBuchung()
     public void setViewPager(int FragmentIndex)
     {
         mViewPager.setCurrentItem(FragmentIndex);
@@ -136,14 +183,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setBuchungIndex(int buchungIndex) {
         BuchungIndex = buchungIndex;
-    }
-
-    public AppZustand getZustand() {
-        return Zustand;
-    }
-
-    public void setZustand(AppZustand zustand) {
-        Zustand = zustand;
     }
 
     public void setMomentanerNutzerIndex(int pMomentanerNutzerIndex)
