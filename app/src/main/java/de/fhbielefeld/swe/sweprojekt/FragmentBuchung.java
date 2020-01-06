@@ -23,22 +23,6 @@ public class FragmentBuchung extends Fragment {
     EditText RaumEingabe;
     Bus EventBus;
 
-    /*Raum[] RaumListe = new Raum[10];
-    Nutzer[] NutzerListe = new Nutzer[10];
-    int AnzahlRaum = 0;
-    int RaumIndex = 0;
-    int BuchungIndex = 0;
-
-    enum AppZustand
-    {
-        STARTZEITEINGABE,
-        ENDZEITEINGABE
-    }
-
-    AppZustand Zustand = AppZustand.STARTZEITEINGABE;*/
-
-    Activity Main = ((MainActivity)getActivity());
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,7 +43,7 @@ public class FragmentBuchung extends Fragment {
                 //EventBus.post("BUCHEN");
                 String RaumName = RaumEingabe.getText().toString();
                 System.out.println("NAME: "+RaumName);
-                EventBus.post(new BuchungEvent(RaumName, Picker.getHour(), Picker.getMinute()));
+                EventBus.post(new BuchungEvent(RaumName, Picker.getHour(), Picker.getMinute(), false, false));
             }
         });
 
@@ -70,7 +54,7 @@ public class FragmentBuchung extends Fragment {
            {
                Toast.makeText(getActivity(), "Gehe zum Login-Fragment", Toast.LENGTH_SHORT).show();
 
-               ((MainActivity)getActivity()).setViewPager(0);
+               EventBus.post(new BuchungEvent("", 0, 0, false, true));//((MainActivity)getActivity()).setViewPager(0);
            }
         });
 
