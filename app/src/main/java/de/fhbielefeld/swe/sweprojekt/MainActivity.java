@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     int RaumIndex;
     int RaumBuchungIndex = 0;
     int MomentanerNutzerIndex = 0;
+    String[] NutzerStringListe = new String[10];
+    String[] RaumNamen = new String[3];
 
     enum BuchungZustand
     {
@@ -50,10 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(mSectionsStatePagerAdapter);
 
+        RaumNamen[0] = "C013";
+        RaumNamen[1] = "D010";
+        RaumNamen[2] = "E406";
+
+
         //NOTE(Moritz): Räume sind Hardcoded. In der Praxis wäre es sicherlich schöner eine Input-Textdatei zu parsen und dementsprechend das Array zu erstellen...
-        RaumListe[AnzahlRaum++] = new Raum("C013");
-        RaumListe[AnzahlRaum++] = new Raum("D010");
-        RaumListe[AnzahlRaum++] = new Raum("E406");
+        RaumListe[AnzahlRaum++] = new Raum(RaumNamen[0]);
+        RaumListe[AnzahlRaum++] = new Raum(RaumNamen[1]);
+        RaumListe[AnzahlRaum++] = new Raum(RaumNamen[2]);
 
         EventBus.register(this);
 
@@ -62,58 +69,65 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe public void FragmentBuchungEvent(BuchungEvent pEvent)
     {
         //TODO(Moritz): Abbruch-Möglichkeit einführen!
-
-        if(Zustand.equals(BuchungZustand.STARTZEITEINGABE))
+        if(!pEvent.StornierSicht)
         {
-            if(!pEvent.NutzerWechsel)
+            if(Zustand.equals(BuchungZustand.STARTZEITEINGABE))
             {
-                RaumName = pEvent.RaumName;
-
-                RaumIndex = RaumArrayIndex(RaumName);
-
-                if(RaumIndex >= 0)
+                if(!pEvent.NutzerWechsel)
                 {
-                    Raum MomentanerRaum = RaumListe[RaumIndex];
-                    if(MomentanerRaum.getAnzahlBuchungen() < 10)
+                    RaumName = pEvent.RaumName;
+
+                    RaumIndex = RaumArrayIndex(RaumName);
+
+                    if(RaumIndex >= 0)
                     {
-                        RaumListe[RaumIndex].BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
+                        Raum MomentanerRaum = RaumListe[RaumIndex];
+                        if(MomentanerRaum.getAnzahlBuchungen() < 10)
+                        {
+                            RaumListe[RaumIndex].BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
 
-                        RaumBuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
+                            RaumBuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
 
-                        System.out.println("STARTZEITEINGABE erfolgreich!");
+                            System.out.println("STARTZEITEINGABE erfolgreich!");
 
-                        EventBus.post(new MainActivityCallbackBuchung(true, false));
+                            EventBus.post(new MainActivityCallbackBuchung(true, false));
 
-                        Zustand = BuchungZustand.ENDZEITEINGABE;
+                            Zustand = BuchungZustand.ENDZEITEINGABE;
+                        }
+                        else
+                        {
+                            System.out.println("Raum ist ausgebucht!");
+                        }
                     }
                     else
                     {
-                        System.out.println("Raum ist ausgebucht!");
+                        System.out.println("STARTZEITEINGABE fehlgeschlagen! Ungueltiger Raum-Name!");
                     }
                 }
                 else
                 {
-                    System.out.println("STARTZEITEINGABE fehlgeschlagen! Ungueltiger Raum-Name!");
+                    setViewPager(0);
                 }
             }
-            else
+            else if(Zustand.equals(BuchungZustand.ENDZEITEINGABE))
             {
-                setViewPager(0);
+                Zustand = BuchungZustand.STARTZEITEINGABE;
+
+                RaumListe[RaumIndex].BuchenEndzeit(pEvent.ZeitStunde, pEvent.ZeitMinute, RaumBuchungIndex);
+
+                MomentanerNutzer.Buchungen[MomentanerNutzer.AnzahlBuchung] = RaumListe[RaumIndex].getBuchung(RaumBuchungIndex);
+                MomentanerNutzer.AnzahlBuchung = MomentanerNutzer.AnzahlBuchung+1;
+
+                EventBus.post(new MainActivityCallbackBuchung(true, true));
+
+                System.out.println("ENDZEITEINGABE erfolgreich!");
             }
         }
-        else if(Zustand.equals(BuchungZustand.ENDZEITEINGABE))
+        else
         {
-            Zustand = BuchungZustand.STARTZEITEINGABE;
-
-            RaumListe[RaumIndex].BuchenEndzeit(pEvent.ZeitStunde, pEvent.ZeitMinute, RaumBuchungIndex);
-
-            MomentanerNutzer.Buchungen[MomentanerNutzer.AnzahlBuchung] = RaumListe[RaumIndex].getBuchung(RaumBuchungIndex);
-            MomentanerNutzer.AnzahlBuchung = MomentanerNutzer.AnzahlBuchung+1;
-
-            EventBus.post(new MainActivityCallbackBuchung(true, true));
-
-            System.out.println("ENDZEITEINGABE erfolgreich!");
+            //Hier String Array erstellen und stornierfragment laden!
         }
+
     }
 
     @Subscribe public void FragmentLogInEvent(LogInEvent pEvent)
@@ -160,6 +174,10 @@ public class MainActivity extends AppCompatActivity {
     public void setViewPager(int FragmentIndex)
     {
         mViewPager.setCurrentItem(FragmentIndex);
+    }
+
+    public String[] getNutzerStringListe() {
+        return NutzerStringListe;
     }
 
     public Raum[] getRaumListe() {
