@@ -26,11 +26,12 @@ public class Buchung {
 
     }
 
-    public Buchung(int startzeitStunde, int startzeitMinute) {
+    public Buchung(int startzeitStunde, int startzeitMinute, String pRaumName) {
         StartzeitStunde = startzeitStunde;
         StartzeitMinute = startzeitMinute;
         EndzeitStunde = StartzeitStunde+1;
         EndzeitMinute = StartzeitMinute;
+        RaumName = pRaumName;
        // Vollstaendig = true;
     }
 

@@ -19,7 +19,7 @@ public class Raum {
 
     public void BuchenStartzeit(int pStartzeitStunde, int pStartzeitMinute)
     {
-        Buchungen[AnzahlBuchungen] = new Buchung(pStartzeitStunde, pStartzeitMinute);
+        Buchungen[AnzahlBuchungen] = new Buchung(pStartzeitStunde, pStartzeitMinute, RaumName);
         AnzahlBuchungen++;
     }
 

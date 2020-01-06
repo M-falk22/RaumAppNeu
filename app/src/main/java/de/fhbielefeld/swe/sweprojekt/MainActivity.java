@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     int RaumIndex;
     int RaumBuchungIndex = 0;
     int MomentanerNutzerIndex = 0;
-    String[] NutzerStringListe = new String[10];
+    String[] NutzerStringListe = new String[] {"","","","","","","","","","" };
     String[] RaumNamen = new String[3];
 
     enum BuchungZustand
@@ -84,7 +84,15 @@ public class MainActivity extends AppCompatActivity {
                         Raum MomentanerRaum = RaumListe[RaumIndex];
                         if(MomentanerRaum.getAnzahlBuchungen() < 10)
                         {
-                            RaumListe[RaumIndex].BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
+                            //Check all buchungen for this room
+
+                            /*int RaumAnzahlBuchungen = MomentanerRaum.AnzahlBuchungen;
+                            for(int BuchungenCount = 0; BuchungenCount < RaumAnzahlBuchungen; BuchungenCount++)
+                            {
+                                MomentanerRaum.Buchungen[BuchungenCount].StartzeitStunde
+                                MomentanerRaum.Buchungen[BuchungenCount].EndzeitStunde;
+                            }*/
+                            MomentanerRaum.BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
 
                             RaumBuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
 
@@ -126,6 +134,19 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             //Hier String Array erstellen und stornierfragment laden!
+            for(int NutzerBuchungenCount = 0;  NutzerBuchungenCount <MomentanerNutzer.AnzahlBuchung; NutzerBuchungenCount++)
+            {
+                Buchung MomentaneBuchung = MomentanerNutzer.Buchungen[NutzerBuchungenCount];
+                String Raum = MomentaneBuchung.RaumName;
+                String StartzeitStunde = Integer.toString(MomentaneBuchung.StartzeitStunde);
+                String StartzeitMinute = Integer.toString(MomentaneBuchung.StartzeitMinute);
+                String EndzeitStunde = Integer.toString(MomentaneBuchung.EndzeitStunde);
+                String EndzeitMinute = Integer.toString(MomentaneBuchung.EndzeitMinute);
+
+                NutzerStringListe[NutzerBuchungenCount] = Raum+" Von "+StartzeitStunde+":"+StartzeitMinute+" bis "+EndzeitStunde+":"+EndzeitMinute;
+            }
+            EventBus.post(new MainActivityCallbackStornierung(true));
+            setViewPager(2);
         }
 
     }

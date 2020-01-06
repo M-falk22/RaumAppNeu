@@ -22,6 +22,7 @@ public class FragmentBuchung extends Fragment {
     TimePicker Picker;
     Button Button;
     Button ButtonAbbruch;
+    Button ButtonStornier;
     EditText RaumEingabe;
     Bus EventBus;
 
@@ -33,6 +34,8 @@ public class FragmentBuchung extends Fragment {
         EventBus = ((MainActivity)getActivity()).getEventBus();
         Button = view.findViewById(R.id.button);
         ButtonBack = view.findViewById(R.id.buttonNavFrgLogIn);
+        ButtonStornier = view.findViewById(R.id.buttonstornierung);
+        ButtonAbbruch = view.findViewById(R.id.buttonabbruch);
         Picker = view.findViewById(R.id.time_picker);
         Picker.setIs24HourView(true);
         RaumEingabe = view.findViewById(R.id.editText);
@@ -59,13 +62,21 @@ public class FragmentBuchung extends Fragment {
            }
         });
 
-       /* ButtonAbbruch.setOnClickListener(new View.OnClickListener() {
+        ButtonAbbruch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
                 EventBus.post(new BuchungEvent("", 0, 0, true, false, false));
             }
-        });*/
+        });
+
+        ButtonStornier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                EventBus.post(new BuchungEvent("", 0, 0, false, false, true));
+            }
+        });
 
         return view;
     }
