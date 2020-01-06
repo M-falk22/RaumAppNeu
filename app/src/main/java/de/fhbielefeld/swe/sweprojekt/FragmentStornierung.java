@@ -25,9 +25,9 @@ public class FragmentStornierung extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragmentstornierung_layout, container, false);
 
-        ((MainActivity)getActivity()).getNutzerStringListe();
+        String[] myStringArray = ((MainActivity)getActivity()).getNutzerStringListe();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(((MainActivity)getActivity()),
                 android.R.layout.simple_list_item_1, myStringArray); //Create string array in main activity when button is pressed and just grab it here in the ugly way or whatever i dont care...
 
         Liste = view.findViewById(R.id.BuchungListe);
