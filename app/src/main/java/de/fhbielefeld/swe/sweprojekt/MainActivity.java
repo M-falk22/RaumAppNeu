@@ -135,11 +135,9 @@ public class MainActivity extends AppCompatActivity {
         return Result;
     }
 
-<<<<<<< HEAD
-    public void UpdateBuchung();
-=======
+
     //public void UpdateBuchung()
->>>>>>> 99c6319a91c44fce99dda9022fc3538a759f71ee
+
     public void setViewPager(int FragmentIndex)
     {
         mViewPager.setCurrentItem(FragmentIndex);
