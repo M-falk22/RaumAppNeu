@@ -24,7 +24,7 @@ public class FragmentStornierung extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragmentstornierung_layout, container, false);
 
-        EventBus = ((MainActivity)getActivity()).getEventBus();
+       /* EventBus = ((MainActivity)getActivity()).getEventBus();
         ButtonLogIn = view.findViewById(R.id.buttonNavFrgBuchung);
         NutzerNameEingabe = view.findViewById(R.id.EditTextNutzerID);
 
@@ -47,7 +47,7 @@ public class FragmentStornierung extends Fragment {
                    Toast.makeText(getActivity(), "Nutzername muss angegeben werden!", Toast.LENGTH_SHORT).show();
                }
            }
-        });
+        });*/
 
         return view;
     }

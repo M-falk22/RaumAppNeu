@@ -12,15 +12,16 @@ import com.squareup.otto.Subscribe;
 public class MainActivity extends AppCompatActivity {
 
     private Bus EventBus = new Bus();
-    //NOTE(Moritz): Alle Arrays sind zu demonstrativen Zwecken auf 10 Elemente beschränkt. Eine verlinkte Liste oder ähnliches zu nutzen, wäre in der Praxis besser.
+    //NOTE(Moritz): Alle Arrays sind zu demonstrativen Zwecken auf 10 Elemente beschränkt. Eine verlinkte Liste oder ähnliches zu nutzen, wäre bei einer vollwertigen App besser.
     Raum[] RaumListe = new Raum[10];
     Nutzer[] NutzerListe = new Nutzer[10];
+    Nutzer MomentanerNutzer;
     int AnzahlNutzer = 0;
     int NutzerIndex;
     int AnzahlRaum = 0;
     String RaumName;
     int RaumIndex;
-    int BuchungIndex = 0;
+    int RaumBuchungIndex = 0;
     int MomentanerNutzerIndex = 0;
 
     enum BuchungZustand
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe public void FragmentBuchungEvent(BuchungEvent pEvent)
     {
         //TODO(Moritz): Abbruch-Möglichkeit einführen!
+
         if(Zustand.equals(BuchungZustand.STARTZEITEINGABE))
         {
             if(!pEvent.NutzerWechsel)
@@ -71,12 +73,23 @@ public class MainActivity extends AppCompatActivity {
 
                 if(RaumIndex >= 0)
                 {
-                    RaumListe[RaumIndex].BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
+                    Raum MomentanerRaum = RaumListe[RaumIndex];
+                    if(MomentanerRaum.getAnzahlBuchungen() < 10)
+                    {
+                        RaumListe[RaumIndex].BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
 
-                    BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
+                        RaumBuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
 
-                    System.out.println("STARTZEITEINGABE erfolgreich!");
-                    Zustand = BuchungZustand.ENDZEITEINGABE;
+                        System.out.println("STARTZEITEINGABE erfolgreich!");
+
+                        EventBus.post(new MainActivityCallbackBuchung(true, false));
+
+                        Zustand = BuchungZustand.ENDZEITEINGABE;
+                    }
+                    else
+                    {
+                        System.out.println("Raum ist ausgebucht!");
+                    }
                 }
                 else
                 {
@@ -87,16 +100,17 @@ public class MainActivity extends AppCompatActivity {
             {
                 setViewPager(0);
             }
-            //Post event zur Button-Änderung bzw Toast-anzeigen!
         }
         else if(Zustand.equals(BuchungZustand.ENDZEITEINGABE))
         {
             Zustand = BuchungZustand.STARTZEITEINGABE;
 
-            RaumListe[RaumIndex].BuchenEndzeit(pEvent.ZeitStunde, pEvent.ZeitMinute, BuchungIndex);
-            //Post event zur Button-Änderung
+            RaumListe[RaumIndex].BuchenEndzeit(pEvent.ZeitStunde, pEvent.ZeitMinute, RaumBuchungIndex);
 
-            //NutzerListe[NutzerIndex].Buchungen[] <--- Buchung in NutzerBuchungsArray eintragen!
+            MomentanerNutzer.Buchungen[MomentanerNutzer.AnzahlBuchung] = RaumListe[RaumIndex].getBuchung(RaumBuchungIndex);
+            MomentanerNutzer.AnzahlBuchung = MomentanerNutzer.AnzahlBuchung+1;
+
+            EventBus.post(new MainActivityCallbackBuchung(true, true));
 
             System.out.println("ENDZEITEINGABE erfolgreich!");
         }
@@ -114,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
             NutzerListe[AnzahlNutzer] = new Nutzer(pEvent.NutzerName);
             NutzerIndex = AnzahlNutzer++;
         }
+        MomentanerNutzer = NutzerListe[NutzerIndex];
     }
 
     public int NutzerArrayIndex(String pNutzerName)
@@ -184,11 +199,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int getBuchungIndex() {
-        return BuchungIndex;
+        return RaumBuchungIndex;
     }
 
     public void setBuchungIndex(int buchungIndex) {
-        BuchungIndex = buchungIndex;
+        RaumBuchungIndex = buchungIndex;
     }
 
     public void setMomentanerNutzerIndex(int pMomentanerNutzerIndex)

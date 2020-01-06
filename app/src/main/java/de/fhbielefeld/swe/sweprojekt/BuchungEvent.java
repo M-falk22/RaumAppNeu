@@ -6,12 +6,14 @@ public class BuchungEvent{
     int ZeitMinute;
     boolean Abbruch;
     boolean NutzerWechsel;
+    boolean StornierSicht;
 
-    public BuchungEvent(String raumName, int zeitStunde, int zeitMinute, boolean abbruch, boolean nutzerWechsel) {
+    public BuchungEvent(String raumName, int zeitStunde, int zeitMinute, boolean abbruch, boolean nutzerWechsel, boolean stornierSicht) {
         RaumName = raumName;
         ZeitStunde = zeitStunde;
         ZeitMinute = zeitMinute;
         Abbruch = abbruch;
         NutzerWechsel = nutzerWechsel;
+        StornierSicht = stornierSicht;
     }
 }
