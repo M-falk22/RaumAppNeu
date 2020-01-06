@@ -12,6 +12,7 @@ import com.squareup.otto.Subscribe;
 public class MainActivity extends AppCompatActivity {
 
     private Bus EventBus = new Bus();
+    //NOTE(Moritz): Alle Arrays sind zu demonstrativen Zwecken auf 10 Elemente beschränkt. Eine verlinkte Liste oder ähnliches zu nutzen, wäre in der Praxis besser.
     Raum[] RaumListe = new Raum[10];
     Nutzer[] NutzerListe = new Nutzer[10];
     int AnzahlNutzer = 0;
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     BuchungZustand Zustand = BuchungZustand.STARTZEITEINGABE;
 
-    //GUI Stuff
     SectionsStatePagerAdapter mSectionsStatePagerAdapter;
     ViewPager mViewPager;
 
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         mSectionsStatePagerAdapter.addFragment(new FragmentLogIn(), "LogIn");
         mSectionsStatePagerAdapter.addFragment(new FragmentBuchung(), "Buchung");
+        mSectionsStatePagerAdapter.addFragment(new FragmentStornierung(), "Stornierung");
 
         mViewPager.setAdapter(mSectionsStatePagerAdapter);
 
@@ -59,27 +60,33 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe public void FragmentBuchungEvent(BuchungEvent pEvent)
     {
+        //TODO(Moritz): Abbruch-Möglichkeit einführen!
         if(Zustand.equals(BuchungZustand.STARTZEITEINGABE))
         {
-
-            RaumName = pEvent.RaumName;
-
-            RaumIndex = RaumArrayIndex(RaumName);
-
-            if(RaumIndex >= 0)
+            if(!pEvent.NutzerWechsel)
             {
-                RaumListe[RaumIndex].BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
+                RaumName = pEvent.RaumName;
 
-                BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
+                RaumIndex = RaumArrayIndex(RaumName);
 
-                System.out.println("STARTZEITEINGABE erfolgreich!");
-                Zustand = BuchungZustand.ENDZEITEINGABE;
+                if(RaumIndex >= 0)
+                {
+                    RaumListe[RaumIndex].BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
+
+                    BuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
+
+                    System.out.println("STARTZEITEINGABE erfolgreich!");
+                    Zustand = BuchungZustand.ENDZEITEINGABE;
+                }
+                else
+                {
+                    System.out.println("STARTZEITEINGABE fehlgeschlagen! Ungueltiger Raum-Name!");
+                }
             }
             else
             {
-                System.out.println("STARTZEITEINGABE fehlgeschlagen! Ungueltiger Raum-Name!");
+                setViewPager(0);
             }
-
             //Post event zur Button-Änderung bzw Toast-anzeigen!
         }
         else if(Zustand.equals(BuchungZustand.ENDZEITEINGABE))
@@ -89,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             RaumListe[RaumIndex].BuchenEndzeit(pEvent.ZeitStunde, pEvent.ZeitMinute, BuchungIndex);
             //Post event zur Button-Änderung
 
-            //NutzerListe[NutzerIndex].Buchungen[]
+            //NutzerListe[NutzerIndex].Buchungen[] <--- Buchung in NutzerBuchungsArray eintragen!
 
             System.out.println("ENDZEITEINGABE erfolgreich!");
         }

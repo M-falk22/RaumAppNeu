@@ -4,10 +4,14 @@ public class BuchungEvent{
     String RaumName;
     int ZeitStunde;
     int ZeitMinute;
+    boolean Abbruch;
+    boolean NutzerWechsel;
 
-    public BuchungEvent(String raumName, int zeitStunde, int zeitMinute) {
+    public BuchungEvent(String raumName, int zeitStunde, int zeitMinute, boolean abbruch, boolean nutzerWechsel) {
         RaumName = raumName;
         ZeitStunde = zeitStunde;
         ZeitMinute = zeitMinute;
+        Abbruch = abbruch;
+        NutzerWechsel = nutzerWechsel;
     }
 }
