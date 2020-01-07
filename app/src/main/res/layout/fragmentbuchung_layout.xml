@@ -119,24 +119,24 @@ android:layout_height="match_parent">
         android:id="@+id/buttonNavFrgLogIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/buttonKamera"
-        android:layout_marginTop="50dp"
+        android:layout_marginLeft="70dp"
         android:text="Zurück zum Login"
         android:background="@drawable/buttonclick"
         android:textColor="@android:color/white"
+        android:layout_alignParentBottom="true"
 
         />
     <Button
         android:id="@+id/buttonstornierung"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/buttonNavFrgLogIn"
-        android:layout_marginTop="50dp"
+        android:layout_toRightOf="@+id/buttonNavFrgLogIn"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
         android:text="Stornierungliste"
         android:background="@drawable/buttonclick"
         android:textColor="@android:color/white"
+
 
         />
 

@@ -53,8 +53,7 @@
         app:counterEnabled="true"
         app:counterMaxLength="10"
         android:maxLines="1"
-        android:lines="1"
-        android:maxLength="10">
+        android:lines="1">
 
         <EditText
             android:id="@+id/EditTextNutzerID"
@@ -65,6 +64,7 @@
             android:layout_alignParentLeft="true"
             android:layout_weight="1"
             android:hint="Bitte Loginname eingeben"
+            android:maxLength="10"
             android:ems="20"
             android:inputType="text"
             android:textColor="@android:color/black"
@@ -72,7 +72,8 @@
             android:shadowDy="10"
             android:shadowRadius="10"
             android:shadowColor="@android:color/darker_gray"
-            android:backgroundTint="@android:color/holo_blue_light"/>
+            android:backgroundTint="@android:color/holo_blue_light"
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 
