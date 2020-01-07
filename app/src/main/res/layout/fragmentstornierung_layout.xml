@@ -9,7 +9,8 @@
         android:id="@+id/imageButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        app:srcCompat="?attr/actionModeCloseDrawable" />
+        app:srcCompat="?attr/actionModeCloseDrawable"
+        android:text="Zurück"/>
 
 
     <ListView
