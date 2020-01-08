@@ -40,6 +40,7 @@
         android:layout_toEndOf="@id/textfield"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="3dp"
         android:text="Login"
         android:background="@drawable/buttonclick"
         android:textColor="@android:color/white"

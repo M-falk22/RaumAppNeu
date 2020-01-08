@@ -4,10 +4,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/scanlogo1"
         android:label="ScanBookFH"
         android:layout_gravity="center_horizontal"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/scanlogo1"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 

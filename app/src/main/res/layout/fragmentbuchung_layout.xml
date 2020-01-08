@@ -25,6 +25,7 @@ android:layout_height="match_parent">
     android:layout_height="80dp"
     android:layout_below="@id/time_picker"
     android:layout_alignParentRight="true"
+    android:layout_marginRight="3dp"
     android:text="Startzeit Festlegen"
     android:textSize="10dp"
     app:layout_constraintBottom_toBottomOf="@+id/time_picker"
@@ -33,6 +34,7 @@ android:layout_height="match_parent">
     tools:layout_editor_absoluteX="100dp"
     android:windowSoftInputMode="adjustResize"
     android:background="@drawable/buttonclick"
+
     />
 
 
@@ -44,6 +46,7 @@ android:layout_height="match_parent">
         android:layout_height="wrap_content"
         android:layout_below="@id/textoder"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="3dp"
         android:layout_marginTop="12dp"
         android:text="Buchung Zurücksetzen"
         android:textSize="10dp"
@@ -106,6 +109,7 @@ android:layout_height="match_parent">
         android:layout_height="wrap_content"
         android:layout_below="@+id/textoder"
         android:layout_marginTop="12dp"
+        android:layout_marginLeft="3dp"
         android:text="QR-Code einscannen"
         android:background="@drawable/buttonclick"
         android:textColor="@android:color/white"
