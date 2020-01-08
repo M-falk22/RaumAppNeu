@@ -123,7 +123,7 @@ android:layout_height="match_parent">
         android:text="Zurück zum Login"
         android:background="@drawable/buttonclick"
         android:textColor="@android:color/white"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="550dp"
 
         />
     <Button
@@ -131,7 +131,7 @@ android:layout_height="match_parent">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/buttonNavFrgLogIn"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="550dp"
         android:layout_marginLeft="10dp"
         android:text="Stornierungliste"
         android:background="@drawable/buttonclick"
