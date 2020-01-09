@@ -47,7 +47,10 @@ public class FragmentBuchung extends Fragment {
                 // Code here executes on main thread after user presses button
                 String RaumName = RaumEingabe.getText().toString();
                 System.out.println("NAME: "+RaumName);
-                EventBus.post(new BuchungEvent(RaumName, Picker.getHour(), Picker.getMinute(), false, false, false));
+                if(RaumName != null)
+                {
+                    EventBus.post(new BuchungEvent(RaumName, Picker.getHour(), Picker.getMinute(), false, false, false));
+                }
             }
         });
 
@@ -74,6 +77,7 @@ public class FragmentBuchung extends Fragment {
             @Override
             public void onClick(View view)
             {
+                RaumEingabe.setText("");
                 EventBus.post(new BuchungEvent("", 0, 0, false, false, true));
             }
         });
@@ -83,7 +87,7 @@ public class FragmentBuchung extends Fragment {
 
     @Subscribe public void MainActivityCallback (MainActivityCallbackBuchung pEvent)
     {
-        if(pEvent.StartzeitErfolg && !pEvent.EndzeitErfolg)
+        if(pEvent.StartzeitErfolg && !pEvent.EndzeitErfolg && pEvent.InfoString.equals("CLEAR"))
         {
             Button.setText("Endzeit festlegen");
         }
@@ -92,6 +96,18 @@ public class FragmentBuchung extends Fragment {
             Button.setText("Startzeit festlegen");
 
             Toast.makeText(getActivity(), "Buchung erfolgreich", Toast.LENGTH_SHORT).show();
+        }
+        else if(!pEvent.StartzeitErfolg && !pEvent.EndzeitErfolg)
+        {
+            Button.setText("Startzeit festlegen");
+
+            Toast.makeText(getActivity(), pEvent.InfoString, Toast.LENGTH_SHORT).show();
+        }
+        else if(pEvent.StartzeitErfolg && !pEvent.EndzeitErfolg && !pEvent.InfoString.equals("CLEAR"))
+        {
+            Button.setText("Endzeit festlegen");
+
+            Toast.makeText(getActivity(), pEvent.InfoString, Toast.LENGTH_SHORT).show();
         }
     }
 }

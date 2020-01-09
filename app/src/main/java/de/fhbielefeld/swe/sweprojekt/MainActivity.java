@@ -9,6 +9,8 @@ import android.os.Bundle;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.LinkedList;
+
 public class MainActivity extends AppCompatActivity {
 
     private Bus EventBus = new Bus();
@@ -85,22 +87,40 @@ public class MainActivity extends AppCompatActivity {
                         if(MomentanerRaum.getAnzahlBuchungen() < 10)
                         {
                             //Check all buchungen for this room
-
-                            /*int RaumAnzahlBuchungen = MomentanerRaum.AnzahlBuchungen;
+                            boolean zeitFrei = true;
+                            int RaumAnzahlBuchungen = MomentanerRaum.AnzahlBuchungen;
                             for(int BuchungenCount = 0; BuchungenCount < RaumAnzahlBuchungen; BuchungenCount++)
                             {
-                                MomentanerRaum.Buchungen[BuchungenCount].StartzeitStunde
-                                MomentanerRaum.Buchungen[BuchungenCount].EndzeitStunde;
-                            }*/
-                            MomentanerRaum.BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
+                                int StartVergleichStunde = MomentanerRaum.Buchungen[BuchungenCount].StartzeitStunde;
+                                int StartVergleichMinute = MomentanerRaum.Buchungen[BuchungenCount].StartzeitMinute;
+                                int EndVergleichStunde = MomentanerRaum.Buchungen[BuchungenCount].EndzeitStunde;
+                                int EndVergleichMinute = MomentanerRaum.Buchungen[BuchungenCount].EndzeitMinute;
 
-                            RaumBuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
+                                if(pEvent.ZeitStunde >= StartVergleichStunde && pEvent.ZeitStunde <= EndVergleichStunde)
+                                {
+                                    if(pEvent.ZeitMinute >= StartVergleichMinute && pEvent.ZeitMinute <= EndVergleichMinute)
+                                    {
+                                        String StartStunde = Integer.toString(StartVergleichStunde);
+                                        String StartMinute = Integer.toString(StartVergleichMinute);
+                                        String EndStunde = Integer.toString(EndVergleichStunde);
+                                        String EndMinute = Integer.toString(EndVergleichMinute);
+                                        EventBus.post(new MainActivityCallbackBuchung(false, false, "Der Raum ist von "+StartStunde+":"+StartMinute+" bis "+EndStunde+":"+EndMinute+" besetzt!"));
+                                        zeitFrei = false;
+                                    }
+                                }
+                            }
+                            if(zeitFrei)
+                            {
+                                MomentanerRaum.BuchenStartzeit(pEvent.ZeitStunde, pEvent.ZeitMinute);
 
-                            System.out.println("STARTZEITEINGABE erfolgreich!");
+                                RaumBuchungIndex = RaumListe[RaumIndex].getAnzahlBuchungen() - 1;
 
-                            EventBus.post(new MainActivityCallbackBuchung(true, false));
+                                System.out.println("STARTZEITEINGABE erfolgreich!");
 
-                            Zustand = BuchungZustand.ENDZEITEINGABE;
+                                EventBus.post(new MainActivityCallbackBuchung(true, false, "CLEAR"));
+
+                                Zustand = BuchungZustand.ENDZEITEINGABE;
+                            }
                         }
                         else
                         {
@@ -126,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 MomentanerNutzer.Buchungen[MomentanerNutzer.AnzahlBuchung] = RaumListe[RaumIndex].getBuchung(RaumBuchungIndex);
                 MomentanerNutzer.AnzahlBuchung = MomentanerNutzer.AnzahlBuchung+1;
 
-                EventBus.post(new MainActivityCallbackBuchung(true, true));
+                EventBus.post(new MainActivityCallbackBuchung(true, true, "CLEAR"));
 
                 System.out.println("ENDZEITEINGABE erfolgreich!");
             }
@@ -134,21 +154,61 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             //Hier String Array erstellen und stornierfragment laden!
-            for(int NutzerBuchungenCount = 0;  NutzerBuchungenCount <MomentanerNutzer.AnzahlBuchung; NutzerBuchungenCount++)
-            {
-                Buchung MomentaneBuchung = MomentanerNutzer.Buchungen[NutzerBuchungenCount];
-                String Raum = MomentaneBuchung.RaumName;
-                String StartzeitStunde = Integer.toString(MomentaneBuchung.StartzeitStunde);
-                String StartzeitMinute = Integer.toString(MomentaneBuchung.StartzeitMinute);
-                String EndzeitStunde = Integer.toString(MomentaneBuchung.EndzeitStunde);
-                String EndzeitMinute = Integer.toString(MomentaneBuchung.EndzeitMinute);
+            if(MomentanerNutzer.AnzahlBuchung != 0) {
+                for (int NutzerBuchungenCount = 0; NutzerBuchungenCount < 10; NutzerBuchungenCount++) {
+                    Buchung MomentaneBuchung = MomentanerNutzer.Buchungen[NutzerBuchungenCount];
+                    if(MomentanerNutzer.Buchungen[NutzerBuchungenCount] != null) {
+                        String Raum = MomentaneBuchung.RaumName;
+                        String StartzeitStunde = Integer.toString(MomentaneBuchung.StartzeitStunde);
+                        String StartzeitMinute = Integer.toString(MomentaneBuchung.StartzeitMinute);
+                        String EndzeitStunde = Integer.toString(MomentaneBuchung.EndzeitStunde);
+                        String EndzeitMinute = Integer.toString(MomentaneBuchung.EndzeitMinute);
 
-                NutzerStringListe[NutzerBuchungenCount] = Raum+" Von "+StartzeitStunde+":"+StartzeitMinute+" bis "+EndzeitStunde+":"+EndzeitMinute;
+                        NutzerStringListe[NutzerBuchungenCount] = Raum + " Von " + StartzeitStunde + ":" + StartzeitMinute + " bis " + EndzeitStunde + ":" + EndzeitMinute;
+                    }
+                    else
+                    {
+                        NutzerStringListe[NutzerBuchungenCount] = "";
+                    }
+                }
             }
-            EventBus.post(new MainActivityCallbackStornierung(true));
+            EventBus.post(new MainActivityCallbackStornierung(true)); //vllt auch noch in if ding rein hauen
             setViewPager(2);
         }
 
+    }
+
+    @Subscribe public void FragmentStornierEvent(StornierEvent pEvent)
+    {
+        String[] TempArray = new String[10];
+        Buchung[] TempBuchungen = new Buchung[10];
+
+        if(pEvent.EntfernIndex != 0 && pEvent.EntfernIndex != 9)
+        {
+            System.arraycopy(NutzerStringListe, 0, TempArray, 0, pEvent.EntfernIndex - 1);
+            System.arraycopy(NutzerStringListe, pEvent.EntfernIndex+1, TempArray, pEvent.EntfernIndex, NutzerStringListe.length-1-pEvent.EntfernIndex);
+
+            System.arraycopy(MomentanerNutzer.Buchungen, 0, TempBuchungen, 0, pEvent.EntfernIndex - 1);
+            System.arraycopy(MomentanerNutzer.Buchungen, pEvent.EntfernIndex+1, TempBuchungen, pEvent.EntfernIndex, MomentanerNutzer.Buchungen.length-1-pEvent.EntfernIndex);
+        }
+        else if(pEvent.EntfernIndex == 0)
+        {
+            System.arraycopy(NutzerStringListe, 1, TempArray, 0, NutzerStringListe.length-2);
+
+            System.arraycopy(MomentanerNutzer.Buchungen, 1, TempBuchungen, 0, MomentanerNutzer.Buchungen.length-2);
+        }
+        else if(pEvent.EntfernIndex == 9)
+        {
+            System.arraycopy(NutzerStringListe, 0, TempArray, 0, NutzerStringListe.length-2);
+
+            System.arraycopy(MomentanerNutzer.Buchungen, 0, TempArray, 0, MomentanerNutzer.Buchungen.length-2);
+        }
+
+        System.arraycopy(TempArray, 0, NutzerStringListe, 0, TempArray.length);
+        System.arraycopy(TempBuchungen, 0, MomentanerNutzer.Buchungen, 0, TempBuchungen.length);
+
+        MomentanerNutzer.AnzahlBuchung = MomentanerNutzer.AnzahlBuchung-1;
+        //EventBus.post(new MainActivityCallbackStornierung(true));
     }
 
     @Subscribe public void FragmentLogInEvent(LogInEvent pEvent)
